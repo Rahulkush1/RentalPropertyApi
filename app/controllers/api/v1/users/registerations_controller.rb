@@ -19,8 +19,8 @@ class Api::V1::Users::RegisterationsController < ApplicationController
       render json: { data: {}, message: 'Please enter a valid phone number' },
              status: :unprocessable_entity
     end
-    rescue Twilio::REST::RestError
-      render json: { message: 'otp code has expired. Resend code' }, status: :unprocessable_entity
+    # rescue Twilio::REST::RestError
+    #   render json: { message: 'otp code has expired. Resend code' }, status: :unprocessable_entity
   end
 
 
