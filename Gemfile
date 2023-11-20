@@ -69,6 +69,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem 'factory_bot_rails'
+
 end
 
 
@@ -85,3 +86,8 @@ gem 'devise'
 gem 'sass-rails'
 gem 'cancancan'
 gem 'dotenv-rails', :groups => [:development, :test]
+gem 'fast_jsonapi'
+gem 'twilio-ruby'
+gem 'redis'
+gem 'redis-rails'
+gem 'sidekiq'

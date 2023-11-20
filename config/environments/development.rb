@@ -36,6 +36,9 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
+  config.active_job.queue_adapter     = :sidekiq
+  config.active_job.queue_name_prefix = "twilio_otp_authentication_#{Rails.env}"
+
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 

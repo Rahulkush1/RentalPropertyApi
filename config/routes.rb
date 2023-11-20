@@ -7,6 +7,7 @@ Rails.application.routes.draw do
             put :update
             delete :destroy
             put :email_confirm
+            post :send_otp_code
           end
         end
         resources :sessions, :only => [:create] do 

@@ -17,7 +17,9 @@ class ApplicationController < ActionController::Base
 
  	rescue_from CanCan::AccessDenied do |exception|
 		render json:  exception.message
- 	end 	
+ 	end
 
- 	
+ 	rescue_from Twilio::REST::RestError do |exception|
+		render json:  exception.message
+ 	end 	
 end

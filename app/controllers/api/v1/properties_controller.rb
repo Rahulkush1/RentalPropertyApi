@@ -17,6 +17,7 @@ class Api::V1::PropertiesController < ApplicationController
     @property = Property.find(params[:id])
 
     render json: @property,status: :ok
+    # render json: PropertySerializer.new(@property).serialized_json, status: :ok
   end
 
   def create
