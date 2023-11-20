@@ -9,7 +9,7 @@ Rental Payments: Record and track rental payments, generate payment reminders, a
 # Installation
 Follow these steps to set up the RentalProperty application locally:
 
-Clone the repository: git clone https://github.com/your-username/RentalProperty.git
+Clone the repository: git clone https://github.com/rahulkush1/RentalPropertyApi.git
 Install dependencies: bundle install
 Set up the database: rails db:create db:migrate
 Run the server: rails server
