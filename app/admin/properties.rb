@@ -10,6 +10,7 @@ ActiveAdmin.register Property do
 			row :status
 			row :publish
 			row :is_paid
+			
 			row "flat_detail" do |obj|
 				ul do
 					li do 
