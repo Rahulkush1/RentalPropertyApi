@@ -3,7 +3,7 @@ class User < ApplicationRecord
 	rolify
 	has_many :properties, dependent: :destroy
 	has_many :appointments, dependent: :destroy
-	after_create :confirm_account
+	# after_create :confirm_account
 	accepts_nested_attributes_for :roles, allow_destroy: true
 
 
