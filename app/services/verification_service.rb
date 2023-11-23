@@ -6,8 +6,8 @@ class VerificationService
     @auth_token = ENV['AUTH_TOKEN']
     @service_sid = ENV['SERVICE_SID']
     @phone_number_with_code = "#{@country_code}#{@phone_number}"
-    client = Twilio::REST::Client.new(@account_sid, @auth_token)
-    @verification_service = client.verify.v2.services(@service_sid)
+    @client = Twilio::REST::Client.new(@account_sid, @auth_token)
+    @verification_service = @client.verify.v2.services(@service_sid)
   end
 
   def send_otp_code
@@ -27,5 +27,14 @@ class VerificationService
                           .create(to: @phone_number_with_code, code: otp_code)
 
     verification_check.status == 'approved'
+  end
+
+  def call
+    call = @client.calls.create(
+                      url: 'http://demo.twilio.com/docs/classic.mp3',
+                      to: '+919713428971',
+                      from: '+16823345208'
+                     )
+    puts call.sid
   end
 end
