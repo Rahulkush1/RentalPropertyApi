@@ -5,10 +5,8 @@ class User < ApplicationRecord
 	has_many :appointments, dependent: :destroy
 	# after_create :confirm_account
 	accepts_nested_attributes_for :roles, allow_destroy: true
-
-
+	
 	def confirm_account
-		binding.pry
 		email_token = JsonWebTokenService.encode({ email: self.email })
 		ConfirmationMailer.confirm_mail(email_token).deliver_now
 	end
