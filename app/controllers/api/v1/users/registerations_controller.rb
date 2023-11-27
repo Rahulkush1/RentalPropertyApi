@@ -19,8 +19,13 @@ class Api::V1::Users::RegisterationsController < ApplicationController
       render json: { data: {}, message: 'Please enter a valid phone number' },
              status: :unprocessable_entity
     end
+<<<<<<< Updated upstream
     # rescue Twilio::REST::RestError
     #   render json: { message: 'otp code has expired. Resend code' }, status: :unprocessable_entity
+=======
+    rescue Twilio::REST::RestError
+        render json: { message: 'otp code has expired. Resend code' }, status: :unprocessable_entity
+>>>>>>> Stashed changes
   end
 
 
@@ -49,7 +54,7 @@ class Api::V1::Users::RegisterationsController < ApplicationController
     token = JsonWebTokenService.decode(params[:token])
     user = User.find_by(email: token["email"])
     if user.update(activated: true, confirmed_at: Time.current.in_time_zone("Mumbai"))
-      render json: {message: "Email is confirmation Successfully, Please Login!"}, status: 200
+      render json: {message: "Email  confirmation Successfully, Please Login!"}, status: 200
     else
       render json: {error: "Invalid Token"}, status: :unprocessable_entity
     end

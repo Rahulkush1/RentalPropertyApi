@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
 	include AuthenticateHelper
-	binding.pry
 	protect_from_forgery unless: -> { request.format.json? }
 	# before_action :authenticate_user
 
@@ -8,7 +7,7 @@ class ApplicationController < ActionController::Base
 		render json: {message: "Please Login!"}
  	end
  	rescue_from ActiveRecord::RecordNotFound do |exception|
-		render json: {message: exception.message}
+	 	render json: {message: exception.message}
  	end
 
  	rescue_from JWT::DecodeError do |exception|

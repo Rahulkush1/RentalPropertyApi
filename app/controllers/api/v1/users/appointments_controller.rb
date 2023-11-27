@@ -45,7 +45,7 @@ class Api::V1::Users::AppointmentsController < ApplicationController
 		@user =  User.find(Property.find(@appointment.property_id).user_id)
 		if @user.id == current_user.id 
 			if @appointment.destroy
-				render json: {message: "appointment with id: #{@appointment.id} is deleted successfuly"},status: :see_other
+				render json: {message: "appointment with id: #{@appointment.id} is deleted successfully"},status: :see_other
 			else
 				render json: {error: @appointment.errors.full_messages}, status: :unprocessable_entity
 			end
