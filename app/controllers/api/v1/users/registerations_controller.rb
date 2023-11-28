@@ -23,7 +23,6 @@ class Api::V1::Users::RegisterationsController < ApplicationController
       render json: { message: 'otp code has expired. Resend code' }, status: :unprocessable_entity
   end
 
-
   def update
     if validate_user
       if @user.update(user_params)
@@ -74,8 +73,6 @@ class Api::V1::Users::RegisterationsController < ApplicationController
         user_params[:country_code]
       ).verify_otp_code?(params['otp_code'])
   end
-
-
 
   private
     def user_params
