@@ -115,7 +115,6 @@ class Api::V1::PropertiesController < ApplicationController
 
   private
   def validate_user
-    binding.pry
     @property = Property.find(params[:id])
     if current_user.id == @property.user_id
       return true
