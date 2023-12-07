@@ -11,7 +11,20 @@ class User < ApplicationRecord
 		ConfirmationMailer.confirm_mail(email_token).deliver_now
 	end
 
-	 def self.ransackable_attributes(auth_object = nil)
+	def self.ransackable_attributes(auth_object = nil)
     	["activated", "confirmed_at", "created_at", "email", "firts_name", "id", "last_name", "password_digest", "updated_at"]
   	end
+
+	def self.from_omniauth(omniauth_params)
+	provider = omniauth_params.provider
+	uid = omniauth_params.uid
+
+	user = User.find_or_initialize_by(provider:, uid:)
+	binding.pry
+	user.email = omniauth_params.info.email
+	user.name = omniauth_params.info.name
+	# user.image = omniauth_params.info.image
+	user.save
+	user
+	end
 end
