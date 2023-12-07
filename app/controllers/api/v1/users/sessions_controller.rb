@@ -24,6 +24,17 @@ class Api::V1::Users::SessionsController < ApplicationController
     render json: current_user, status: :ok
   end
 
+  def omniauth_login
+    @user = User.from_omniauth(request.env['omniauth.auth'])
+    binding.pry
+    if @user.persisted?
+      token = JsonWebTokenService.encode({ id: @user.id })
+      render json: { data: {auth_token: token, id: @user.id, email: @user.email} }, status: :ok
+    else
+       render json: { error: @user.errors.full_messages }, status: :unauthorized
+    end
+  end
+
 
   private
     def user_params

@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
+  post "/auth/google_oauth2"
+  get "/auth/google_oauth2/callback", to: "users/sessions#omniauth_login"
   namespace :api do
     namespace :v1 do
       namespace :users do
         resources :registerations, :only => [:create] do 
+
           collection do 
             put :update
             delete :destroy
