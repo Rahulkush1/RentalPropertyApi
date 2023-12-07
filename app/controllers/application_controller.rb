@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
 	include AuthenticateHelper
-	binding.pry
 	protect_from_forgery unless: -> { request.format.json? }
 	# before_action :authenticate_user
 
