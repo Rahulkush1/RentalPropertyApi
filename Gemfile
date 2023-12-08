@@ -96,3 +96,5 @@ gem "omniauth-rails_csrf_protection", "~> 1.0"
 gem 'activeadmin_materialize_theme'
 gem 'active_admin_flat_skin'
 gem 'font-awesome-rails'
+gem 'stripe'
+
