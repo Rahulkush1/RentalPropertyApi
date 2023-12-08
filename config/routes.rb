@@ -5,7 +5,6 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :users do
         resources :registerations, :only => [:create] do 
-
           collection do 
             put :update
             delete :destroy
@@ -37,6 +36,8 @@ Rails.application.routes.draw do
           delete :delete_image_attachment
         end
       end
+      post '/create_payment_intent', to: "payments#create_payment_intent"
+      get '/payment_confirmation', to: "payments#payment_confirmation"
     end
   end
 
