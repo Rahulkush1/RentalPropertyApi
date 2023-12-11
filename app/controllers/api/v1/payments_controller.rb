@@ -51,18 +51,5 @@ class Api::V1::PaymentsController < ApplicationController
 		render json: {payment: payment }
 	end
 
-  # def createProduct
-  #   product = Stripe::Product.create({
-  #     name: @property.name,
-  #   })
-  # end
-
-	# def createPrice
-	# 	price = Stripe::Price.create({
-	#     product: product.id,
-	#     unit_amount: @property.price * 100,
-	#     currency: 'inr'
-	#   })
-	# end
 
 end
