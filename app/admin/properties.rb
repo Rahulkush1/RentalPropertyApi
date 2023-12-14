@@ -3,9 +3,12 @@ ActiveAdmin.register Property do
 	remove_filter :appointments
 
 	index do
+		selectable_column
 		column :name
 		column :price
 		column :amenities
+		column :user
+		actions
 	end
 	show do 
 		attributes_table do

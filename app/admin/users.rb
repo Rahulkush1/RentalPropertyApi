@@ -13,6 +13,7 @@ ActiveAdmin.register User do
 		column :created_at
 		column :updated_at
 		column :confirmed_at
+		column :roles
 		column :activated
 		actions
 	end
