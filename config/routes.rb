@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Avo::Engine, at: Avo.configuration.root_path
   post "/auth/google_oauth2"
   get "/auth/google_oauth2/callback", to: "users/sessions#omniauth_login"
   namespace :api do
@@ -36,6 +37,7 @@ Rails.application.routes.draw do
           delete :delete_image_attachment
         end
       end
+      resources :payouts, :only => [:index, :create]
       post '/create_payment_intent', to: "payments#create_payment_intent"
       get '/payment_confirmation', to: "payments#payment_confirmation"
     end
@@ -44,6 +46,9 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
+  # authenticate :admin_users do
+  #   mount Avo::Engine, at: Avo.configuration.root_path
+  # end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # root "articles#index"
 end
