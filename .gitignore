@@ -7,3 +7,6 @@
 !/tmp/.keep
 
 
+.env
+/config/master.key
+/config/local_env.yml

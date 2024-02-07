@@ -15,9 +15,9 @@ Rails.application.routes.draw do
         resources :sessions, :only => [:create] do 
           collection do
             get :show 
-
           end
         end
+        resources :user_address, :only => [:create] 
         resources :appointments, :only => [:create] do 
           collection do 
             get :index 
