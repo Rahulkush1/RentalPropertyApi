@@ -13,6 +13,7 @@ class Api::V1::PropertiesController < ApplicationController
     else
      @properties = Property.where(publish: 1).where(status: 0).where(is_paid: false)
     end
+    @properties = @properties.page(params[:page]).per(params[:perPage])
   	# render json: @properties, status: :ok
     render json: PropertySerializer.new(@properties).serialized_json, status: :ok
     

@@ -428,6 +428,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   jwt
+  kaminari
   omniauth-google-oauth2
   omniauth-rails_csrf_protection (~> 1.0)
   pry
