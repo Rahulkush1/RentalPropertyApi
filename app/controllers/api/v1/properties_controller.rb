@@ -9,7 +9,8 @@ class Api::V1::PropertiesController < ApplicationController
 
     elsif params[:recomended_property] 
       @properties = Property.where(publish: 1).where(status: 0).where(is_paid: false)
-      @properties = @properties.joins(:address).where(address: {city: "#{current_user.address.city}"})
+      @properties = @properties.joins(:address).where(address: {city: "#{current_user.address.city}"}).limit(4)
+      return render json: PropertySerializer.new(@properties).serialized_json, status: :ok
     else
      @properties = Property.where(publish: 1).where(status: 0).where(is_paid: false)
     end
@@ -88,8 +89,8 @@ class Api::V1::PropertiesController < ApplicationController
     if params[:status] == "pending"
       @property = @property.where(status: "pending")
     end
-    if params[:min_price].present? && params[:max_price].present?
-      @property  = @property.where('price BETWEEN ? AND ?',params[:min_price],params[:max_price], images: [:data]) 
+    if params[:min_price] != 'null' && params[:max_price] != 'null'
+      @property  = @property.where('price BETWEEN ? AND ?',params[:min_price],params[:max_price]) 
     end
     if params[:posted] == "owner" or params[:posted] == "broker"  
       @properties = []
@@ -105,7 +106,7 @@ class Api::V1::PropertiesController < ApplicationController
       end
       @property = @properties
     end
-    render json: @property , status: :ok
+    render json: PropertySerializer.new(@property).serialized_json, status: :ok
   end
 
   def delete_image_attachment

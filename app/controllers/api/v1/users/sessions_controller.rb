@@ -9,18 +9,18 @@ class Api::V1::Users::SessionsController < ApplicationController
             token = JsonWebTokenService.encode({ id: @user.id })
             render json: { data: {auth_token: token, id: @user.id, email: @user.email} }, status: :ok
         else
-          render json: { error: "Incorrect Email Or password" }, status: :unauthorized
+          render json: { message: "Incorrect Email Or password" }, status: :unauthorized
         end
       else
-        render json: {error: "Account Not found or Unconfirmed account"}, status: :not_found
+        render json: {message: "Account Not found or Unconfirmed account"}, status: :not_found
       end 
     else
-      render json: {error: "Account Not found!"}, status: :not_found
+      render json: {message: "Account Not found!"}, status: :not_found
     end
   end
 
   def show
-    render json: current_user, status: :ok
+    render json: UserSerializer.new(current_user).serialized_json, status: :ok
   end
 
   def omniauth_login
