@@ -17,7 +17,6 @@ class Api::V1::Users::SessionsController < ApplicationController
     else
       render json: {error: "Account Not found!"}, status: :not_found
     end
-
   end
 
   def show
@@ -26,7 +25,6 @@ class Api::V1::Users::SessionsController < ApplicationController
 
   def omniauth_login
     @user = User.from_omniauth(request.env['omniauth.auth'])
-    binding.pry
     if @user.persisted?
       token = JsonWebTokenService.encode({ id: @user.id })
       render json: { data: {auth_token: token, id: @user.id, email: @user.email} }, status: :ok

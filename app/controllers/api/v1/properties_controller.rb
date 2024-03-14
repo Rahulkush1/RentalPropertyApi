@@ -7,10 +7,16 @@ class Api::V1::PropertiesController < ApplicationController
     if params[:self_property] == true
   	 @properties = current_user.properties.where(publish: 1).where(status: 0).where(is_paid: false)
 
+    elsif params[:recomended_property] 
+      @properties = Property.where(publish: 1).where(status: 0).where(is_paid: false)
+      @properties = @properties.joins(:address).where(address: {city: "#{current_user.address.city}"})
     else
      @properties = Property.where(publish: 1).where(status: 0).where(is_paid: false)
     end
-  	render json: @properties, status: :ok
+    @properties = @properties.page(params[:page]).per(params[:perPage])
+  	# render json: @properties, status: :ok
+    render json: PropertySerializer.new(@properties).serialized_json, status: :ok
+    
   end
 
   def property_detail  
