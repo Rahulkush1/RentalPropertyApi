@@ -2,29 +2,27 @@ class Api::V1::PropertiesController < ApplicationController
   before_action :authenticate_user, :only => [:index,:create, :update, :destroy, :delete_image_attachment]
   # before_action :validate_user, :only => [:update, :destroy, :delete_image_attachment]
   load_and_authorize_resource
+  
   Not_Authorized = "Not Authorized"
   def index
-    if params[:self_property] == true
-  	 @properties = current_user.properties.where(publish: 1).where(status: 0).where(is_paid: false)
-
-    elsif params[:recomended_property] 
+    if params[:self_property].present? &&  params[:self_property] == true
+      @properties = current_user.properties.where(publish: 1).where(status: 0).where(is_paid: false)
+    elsif params[:recomended_property].present? && params[:recomended_property] == "true"
       @properties = Property.where(publish: 1).where(status: 0).where(is_paid: false)
       @properties = @properties.joins(:address).where(address: {city: "#{current_user.address.city}"}).limit(4)
       return render json: PropertySerializer.new(@properties).serialized_json, status: :ok
     else
-     @properties = Property.where(publish: 1).where(status: 0).where(is_paid: false)
+      apiFeature =  ApiFeatures.new(Property.all, request.query_parameters).search().filter()
+      @properties = apiFeature
     end
-    @properties = @properties.page(params[:page]).per(params[:perPage])
-  	# render json: @properties, status: :ok
-    render json: PropertySerializer.new(@properties).serialized_json, status: :ok
-    
+    @total_property_count = @properties.count
+    @properties = @properties.page(params[:page]).per(25)
+    render json: {properties: JSON.parse(PropertySerializer.new(@properties).serialized_json), total_property_count: @total_property_count}, status: :ok
   end
 
   def property_detail  
     @property = Property.find(params[:id])
-
-    render json: @property,status: :ok
-    # render json: PropertySerializer.new(@property).serialized_json, status: :ok
+    render json: PropertySerializer.new(@property).serialized_json, status: :ok
   end
 
   def create
@@ -135,3 +133,46 @@ class Api::V1::PropertiesController < ApplicationController
    	params.require(:property).permit(:name, :price,:status, :publish,  flat_detail_attributes: [:flat_type, :area, :available_for], amenity_ids: [], address_attributes: [:address_line, :street, :state ,:city, :country], attachments_attributes: [image: {}])
   end 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# class ApiFeatures
+#   def initialize(query, query_str)
+#     @query = query
+#     @query_str = query_str
+#   end
+
+#   def search
+#     keyword = @query_str[:keyword].present? ? { name: /#{@query_str[:keyword]}/i } : {}
+#     binding.pry
+#     @query = @query.where(keyword)
+#     self
+#   end
+
+#   # def filter
+#   #   query_copy = @query_str.dup
+#   #   remove_fields = ["keyword", "page", "limit"]
+#   #   remove_fields.each { |key| query_copy.delete(key) }
+
+#   #   query_str = query_copy.to_json
+#   #   query_str.gsub!(/\b(gt|gte|lt|lte)\b/) { |match| "$#{match}" }
+#   #   @query = @query.where(JSON.parse(query_str))
+#   #   self
+#   # end
+
+# end
