@@ -1,5 +1,5 @@
 class Api::V1::PropertiesController < ApplicationController
-  before_action :authenticate_user, :only => [:index,:create, :update, :destroy, :delete_image_attachment]
+  before_action :authenticate_user, :only => [:create, :update, :destroy, :delete_image_attachment]
   # before_action :validate_user, :only => [:update, :destroy, :delete_image_attachment]
   load_and_authorize_resource
   
@@ -8,8 +8,9 @@ class Api::V1::PropertiesController < ApplicationController
     if params[:self_property].present? &&  params[:self_property] == true
       @properties = current_user.properties.where(publish: 1).where(status: 0).where(is_paid: false)
     elsif params[:recomended_property].present? && params[:recomended_property] == "true"
+
       @properties = Property.where(publish: 1).where(status: 0).where(is_paid: false)
-      @properties = @properties.joins(:address).where(address: {city: "#{current_user.address.city}"}).limit(4)
+      @properties = @properties.joins(:address).where(address: {city: params[:user_city].downcase}).limit(4)
       return render json: PropertySerializer.new(@properties).serialized_json, status: :ok
     else
       apiFeature =  ApiFeatures.new(Property.all, request.query_parameters).search().filter()
@@ -130,7 +131,7 @@ class Api::V1::PropertiesController < ApplicationController
 
   private
   def property_params 
-   	params.require(:property).permit(:name, :price,:status, :publish,  flat_detail_attributes: [:flat_type, :area, :available_for], amenity_ids: [], address_attributes: [:address_line, :street, :state ,:city, :country], attachments_attributes: [image: {}])
+   	params.require(:property).permit(:name, :price,:status, :publish, :prop_type,  flat_detail_attributes: [:flat_type, :area, :available_for], amenity_ids: [], address_attributes: [:address_line, :street, :state ,:city, :country], attachments_attributes: [image: {}])
   end 
 end
 

@@ -40,8 +40,12 @@ class ApiFeatures
       if query_copy[:status] == "pending"
         @query = @query.where(status: "pending")
       end
-      if query_copy[:min_price] != 'null' && query_copy[:max_price] != 'null'
+      if query_copy[:min_price] != 'null' && query_copy[:max_price] != 'null' 
         @query  = @query.where('price BETWEEN ? AND ?',query_copy[:min_price],query_copy[:max_price]) 
+      end
+
+      if query_copy[:prop_type] != 'null'
+        @query  = @query.where(prop_type: query_copy[:prop_type]) 
       end
       if query_copy[:posted] == "owner" or query_copy[:posted] == "broker"  
         @properties = []
