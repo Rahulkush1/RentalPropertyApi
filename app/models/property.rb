@@ -25,9 +25,9 @@ class Property < ApplicationRecord
 
   	enum prop_type: {
   		Select: -1,
-	    Flat: 0,
+	    FLAT: 0,
 	    PG: 1,
-	    Room: 2
+	    ROOM: 2
   	}
 
   	def self.ransackable_attributes(auth_object = nil)
