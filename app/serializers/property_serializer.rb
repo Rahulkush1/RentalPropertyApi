@@ -22,6 +22,22 @@ class PropertySerializer
     object.user&.email
   end
 
+  attribute :flat_detail do |object|
+    object&.flat_detail
+  end
+
+  attribute :posted do |object|
+    object&.user.roles.last.name
+  end
+
+  attribute :average_rating do |object|
+    object&.average_rating
+  end
+
+  attribute :reviews do |object| 
+    ReviewSerializer.new(object&.reviews)
+  end
+
   attribute :avatar do |object|
     object&.attachments.map do |obj|
       Rails.application.routes.url_helpers.rails_blob_url(obj.image,only_path: true)

@@ -6,6 +6,8 @@ class Property < ApplicationRecord
 	has_and_belongs_to_many :amenities, :join_table => :amenities_properties, dependent: :destroy
 	has_many :attachments, dependent: :destroy
 	has_many :appointments, dependent: :destroy
+	has_many :reviews, as: :reviewable  , dependent: :destroy
+	has_many :reviewers, through: :reviews, source: :user
 	accepts_nested_attributes_for :flat_detail, allow_destroy: true
 	accepts_nested_attributes_for :amenities, allow_destroy: true
 	accepts_nested_attributes_for :address, allow_destroy: true
@@ -29,6 +31,10 @@ class Property < ApplicationRecord
 	    PG: 1,
 	    ROOM: 2
   	}
+
+  	def average_rating
+  		self.reviews.average('reviews.rating')
+  	end
 
   	def self.ransackable_attributes(auth_object = nil)
     	["created_at", "id", "is_paid", "name", "price", "prop_type", "publish", "status", "updated_at", "user_id"]
