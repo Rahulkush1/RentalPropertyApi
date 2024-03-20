@@ -25,15 +25,12 @@ class Api::V1::Users::RegisterationsController < ApplicationController
   end
 
   def update
-    if validate_user
-      if @user.update(user_params)
-        render json: @user, status: :ok 
+    
+      if current_user.update(user_params)
+        render json: UserSerializer.new(current_user).serialized_json, status: :ok 
       else
-        render json: @user.errors.full_messages, status: :unprocessable_entity
+        render json: current_user.errors.full_messages, status: :unprocessable_entity
       end
-    else
-      render json: {error: Not_Authorized}
-    end
   end
 
   def validate_user
@@ -78,6 +75,6 @@ class Api::V1::Users::RegisterationsController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:email, :password, :firts_name, :last_name, :phone_number, :country_code, role_ids: [])
+      params.require(:user).permit(:email, :password, :first_name, :last_name, :phone_number, :country_code, role_ids: [])
     end
 end

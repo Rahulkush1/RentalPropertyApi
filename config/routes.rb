@@ -36,6 +36,7 @@ Rails.application.routes.draw do
           delete :delete_image_attachment
         end
       end
+      resources :reviews, :only => [:create]
       post '/create_payment_intent', to: "payments#create_payment_intent"
       get '/payment_confirmation', to: "payments#payment_confirmation"
     end

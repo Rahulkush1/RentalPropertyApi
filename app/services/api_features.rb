@@ -5,7 +5,7 @@ class ApiFeatures
   end
 
   def search
-    keyword = @query_str[:keyword].present? && @query_str[:keyword] != 'null' ? { city: @query_str[:keyword] } : {}
+    keyword = @query_str[:keyword].present? && @query_str[:keyword] != 'null' ? { city: @query_str[:keyword].downcase } : {}
     if keyword.present?
       @query = @query.joins(:address).where(address: keyword)
     else
@@ -43,23 +43,27 @@ class ApiFeatures
       if query_copy[:min_price] != 'null' && query_copy[:max_price] != 'null' 
         @query  = @query.where('price BETWEEN ? AND ?',query_copy[:min_price],query_copy[:max_price]) 
       end
+      if query_copy[:prop_type] != 'null' &&  (query_copy[:prop_type] == 'PG' || query_copy[:prop_type] == 'ROOM') && query_copy[:prop_type].present?
+        @query  = @query.where(prop_type: query_copy[:prop_type])
+      end
 
-      if query_copy[:prop_type] != 'null'
-        @query  = @query.where(prop_type: query_copy[:prop_type]) 
+      if query_copy[:prop_type] != 'PG' && query_copy[:prop_type] != 'ROOM' && query_copy[:prop_type] != 'null' && query_copy[:prop_type].present?
+        if query_copy[:prop_type] == '1BHK'
+          query_copy[:prop_type] = 'ONE_BHK'
+        elsif query_copy[:prop_type] == '2BHK'
+          query_copy[:prop_type] = 'TWO_BHK'
+        else 
+          query_copy[:prop_type] = 'THREE_BHK'
+        end
+        @query = @query.joins(:flat_detail).where(flat_detail: {flat_type: query_copy[:prop_type]})
       end
       if query_copy[:posted] == "owner" or query_copy[:posted] == "broker"  
-        @properties = []
-        @query.each do |prop|
-          user = User.find(prop.user_id)
-          user.roles.each do |role|
-            if role.name != "user"
-              if role.name == params[:posted]
-                @properties << prop
-              end
-            end
-          end
-        end
-        @query = @properties
+        @query = @query.joins(user: :roles).where(roles: { name: query_copy[:posted]})
+      end
+
+      if query_copy[:rating] != 'null'
+          @query = @query.where(id: @query.select(:id).group(:id).having('AVG(reviews.rating) >= ?', query_copy[:rating].to_f).joins(:reviews))
+        
       end
     else
       @query
