@@ -1,20 +1,35 @@
 class Api::V1::Users::AppointmentsController < ApplicationController
-	before_action :authenticate_user, :only => [:create, :index, :update, :destroy]
+	before_action :authenticate_user, :only => [:create, :index, :update, :destroy,:get_property_appointment]
   	load_and_authorize_resource param_method: :appoinment_params
 
 	def index
+		 
 		if params["self_appointment"]
-			render json: current_user.appointments ,status: :ok
+			render json: AppointmentSerializer.new(current_user.appointments).serialized_json ,status: :ok
 		else
-			render json: Appointment.joins(property: :user).where(user: {id: current_user.id}),status: :ok
+			render json: AppointmentSerializer.new(Appointment.joins(property: :user).where(user: {id: current_user.id})).serialized_json,status: :ok
 		end
 	end
 	def create 
-		@appointment = current_user.appointments.new(appoinment_params)
-		if @appointment.save
-			render json: @appointment, status: :created
+		@appointment_exits = Appointment.find_by(user_id: current_user.id, property_id: appoinment_params[:property_id])
+		if @appointment_exits
+			render json: {message: "You already have submit for Appointment" }, status: :unprocessable_entity
 		else
-			render json: @appointment.errors.full_messages, status: :unprocessable_entity
+			@appointment = current_user.appointments.new(appoinment_params)
+			if @appointment.save
+				render json: AppointmentSerializer.new(@appointment).serialized_json, status: :created
+			else
+				render json: @appointment.errors.full_messages, status: :unprocessable_entity
+			end
+		end
+	end
+
+	def get_property_appointment
+		@appointment  = current_user.appointments.find_by(property_id: params[:property_id])
+		if @appointment
+			render json: AppointmentSerializer.new(@appointment).serialized_json ,status: :ok
+		else
+			render json: {message: "Not Found"}, status: :unprocessable_entity
 		end
 	end
 
@@ -57,6 +72,6 @@ class Api::V1::Users::AppointmentsController < ApplicationController
 	private
 	 def appoinment_params
 
-	 	params.require(:appointment).permit(:name, :email, :status, :visit_status, :phone, :date, :time, :property_id)
+	 	params.require(:appointment).permit(:name, :email, :status, :visit_status, :phone, :date, :property_id)
 	 end
 end
