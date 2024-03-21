@@ -1,5 +1,11 @@
-class AppointmentSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :status, :visit_status,   :phone, :date, :time
-  belongs_to :user
-  belongs_to :property
+class AppointmentSerializer 
+  include FastJsonapi::ObjectSerializer
+
+  set_key_transform :underscore
+  attributes :id, :name, :email, :phone, :date
+
+  attribute :property do |object| 
+    Property.find(object.property_id)
+  end
+
 end

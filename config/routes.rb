@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   post "/auth/google_oauth2"
   get "/auth/google_oauth2/callback", to: "users/sessions#omniauth_login"
+  mount ActionCable.server => '/cable'
   namespace :api do
     namespace :v1 do
       namespace :users do
@@ -23,6 +24,7 @@ Rails.application.routes.draw do
             get :index 
             put :update
             delete :destroy
+            get :get_property_appointment
           end
         end
       end
