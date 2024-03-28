@@ -1,6 +1,7 @@
 class Appointment < ApplicationRecord
 	belongs_to :user
 	belongs_to :property
+	after_create :send_appointment_mail
 	
 	enum status: {
 		pending: 0,
@@ -12,4 +13,8 @@ class Appointment < ApplicationRecord
 		visit_approved: 1,
 		visit_rejected: 2
 	}
+
+	def send_appointment_mail
+		SendAppointmentEmailJob.perform_async(self.to_json)
+	end
 end
