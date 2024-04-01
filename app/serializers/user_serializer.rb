@@ -19,12 +19,21 @@ class UserSerializer
   #     Rails.application.routes.url_helpers.rails_blob_url(obj.image,only_path: true)
   #   end
   # end
+
+  attributes :customer_id do |object|
+    object&.customer_id
+  end
+  
   attributes :role do |object|
     object&.roles.last.name
   end
 
   attribute :address do |object|
     object&.address
+  end
+
+  attribute :booking do |object|
+    object&.bookings
   end
 
 

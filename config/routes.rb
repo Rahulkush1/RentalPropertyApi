@@ -39,8 +39,11 @@ Rails.application.routes.draw do
         end
       end
       resources :reviews, :only => [:create]
-      post '/create_payment_intent', to: "payments#create_payment_intent"
-      get '/payment_confirmation', to: "payments#payment_confirmation"
+      post '/payment/process', to: "payments#create"
+      post '/payment/complete', to: 'payments#complete'
+      get '/bookings', to: "payments#index"
+      get '/users/property/get_property_booking', to: "payments#get_property_booking"
+
     end
   end
 

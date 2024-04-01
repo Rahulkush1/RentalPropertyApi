@@ -3,6 +3,7 @@ class Property < ApplicationRecord
 	belongs_to :user
 	has_one :flat_detail, dependent: :destroy
 	has_one :address, as: :addressable,dependent: :destroy
+	has_one :booking, dependent: :destroy
 	has_and_belongs_to_many :amenities, :join_table => :amenities_properties, dependent: :destroy
 	has_many :attachments, dependent: :destroy
 	has_many :appointments, dependent: :destroy

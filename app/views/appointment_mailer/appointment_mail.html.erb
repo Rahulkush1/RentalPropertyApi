@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation: Property Visit Appointment Scheduled</title>
+</head>
+<body>
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <p>Dear <%= @user.first_name %>,</p>
+        <p>I hope this email finds you well. This is just a quick note to inform you that we have received your request to schedule an appointment to visit the property located at <%= @property.address.address_line %> <%= @property.address.street %> <%= @property.address.city %> , <%= @property.address.state %>.</p>   
+        <p>Your appointment request is currently pending confirmation from our team. We are working diligently to finalize the schedule and will notify you as soon as it is confirmed.</p>
+        
+        <h5>Here are the details of your requested appointment::</h5>
+        <ul>
+            <li><strong>Property Name:</strong> <%= @property.name %></li>
+            <li><strong>Property Address:</strong> <%= @property.address.address_line %> <%= @property.address.street %> <%= @property.address.city %> , <%= @property.address.state %> </li>
+            <li><strong>Preferred Date:</strong> <%=  @appointment.date.strftime("%A, %B %d, %Y") %> </li>
+        </ul>
+        
+        <p>We understand the importance of your time and interest in visiting the property. Rest assured, we are doing our best to accommodate your request and will provide you with an update at the earliest convenience.</p>
+        
+        <p>If you have any urgent inquiries or if there are any changes you would like to make to your appointment request, please feel free to contact us. We are here to assist you in any way we can.</p>
+        
+        <p>Thank you for your patience and understanding. We look forward to confirming your appointment and assisting you further with your property search.</p>
+        
+        <p>Thank you for choosing to visit the property with us. We look forward to meeting you and showing you around the property.</p>
+        
+        <p>Best regards,<br>
+        RentalProperty<br>
+        +91726782363682</p>
+    </div>
+</body>
+</html>
+
+
+
+
+
+

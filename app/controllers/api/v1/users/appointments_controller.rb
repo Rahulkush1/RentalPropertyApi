@@ -7,7 +7,7 @@ class Api::V1::Users::AppointmentsController < ApplicationController
 		if params["self_appointment"]
 			render json: AppointmentSerializer.new(current_user.appointments).serialized_json ,status: :ok
 		else
-			render json: AppointmentSerializer.new(Appointment.joins(property: :user).where(user: {id: current_user.id})).serialized_json,status: :ok
+			render json: AppointmentSerializer.new(Appointment.joins(property: :user).where(user: {id: current_user.id}).order(created_at: :asc)).serialized_json,status: :ok
 		end
 	end
 	def create 
@@ -34,11 +34,14 @@ class Api::V1::Users::AppointmentsController < ApplicationController
 	end
 
 	def update
+
 		@appointment = Appointment.find(params[:id])
+
 		@user =  User.find(Property.find(@appointment.property_id).user_id)
 		if @user.id == current_user.id
 			if appoinment_params[:status]
 				 if @appointment.update(status: appoinment_params[:status])
+				 	SendConfirmationAppointmentMailJob.perform_async(@appointment.to_json)
 				 	render json: @appointment, status: 202
 				 else
 				 	render json: {error: @appointment.errors.full_messages}, status: :unprocessable_entity
