@@ -2,7 +2,7 @@ class Api::V1::PaymentsController < ApplicationController
 	# before_action :getPropertyId
 	# before_action :createProduct
 	# before_action :createPrice
-  before_action :authenticate_user, :only => [:create, :complete]
+  before_action :authenticate_user, :only => [:create, :complete, :index, :get_property_booking]
 	# def create_payment_intent
 
 	# 	@property = Property.find(params[:property_id])
@@ -66,8 +66,8 @@ class Api::V1::PaymentsController < ApplicationController
 	# end
 
 	def create
-		amount = params[:data][:amount].to_i * 100
-		customer_id = params[:data][:customer_id]
+		amount = params[:amount].to_i * 100
+		customer_id = current_user.customer_id
 		@myPayment =  Stripe::PaymentIntent.create({
 			amount: amount,
 			currency: "inr",
@@ -81,20 +81,42 @@ class Api::V1::PaymentsController < ApplicationController
 	end
 
 	def complete
-		binding.pry
-		@payment_intent_id = params[:payment_intent]
-		@payment = current_user.payments.new(payment_params)
-		if @payment.save
-			render json: PaymentSerializer.new(@payment).serialized_json, status: 201
+
+		@booking = current_user.bookings.create(booking_params)
+		# @payment_intent_id = params[:payment_intent]
+		# @payment = current_user.payments.new(payment_params)
+		if @booking.save
+			@property = Property.find_by(id: booking_params[:property_id])
+			@property.update(status: 1)
+			render json: BookingSerializer.new(@booking).serialized_json, status: 201
 		else
-			 render json: { error: @payment.errors.full_messages }, status: :unprocessable_entity
+			 render json: { error: @booking.errors.full_messages }, status: :unprocessable_entity
+		end
+	end
+
+	def index
+		@bookings  = current_user.bookings 
+		if @bookings
+			render json: BookingSerializer.new(@bookings).serialized_json, status: 200
+		else
+			render json: { error: @bookings.errors.full_messages }, status: :unprocessable_entity
+		end
+	end
+
+	def get_property_booking
+	
+		@booking  = current_user.bookings.find_by(property_id: params[:property_id])
+		if @booking
+			render json: BookingSerializer.new(@booking).serialized_json ,status: :ok
+		else
+			render json: {message: "Not Found"}, status: :unprocessable_entity
 		end
 	end
 
 	private
 
-	def payment_params
-		params.permit(:payment_intent_id, :paid_At, :payment_status)
+	def booking_params
+		params.require(:booking).permit(:property_id,:status, payment_attributes: {})
 	end
 
 end

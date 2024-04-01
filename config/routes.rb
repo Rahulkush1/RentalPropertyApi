@@ -40,8 +40,10 @@ Rails.application.routes.draw do
       end
       resources :reviews, :only => [:create]
       post '/payment/process', to: "payments#create"
-      get '/payment/complete', to: 'payments#complete'
-      get '/payment_confirmation', to: "payments#payment_confirmation"
+      post '/payment/complete', to: 'payments#complete'
+      get '/bookings', to: "payments#index"
+      get '/users/property/get_property_booking', to: "payments#get_property_booking"
+
     end
   end
 

@@ -32,5 +32,9 @@ class UserSerializer
     object&.address
   end
 
+  attribute :booking do |object|
+    object&.bookings
+  end
+
 
 end

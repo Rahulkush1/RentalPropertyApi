@@ -6,10 +6,13 @@ class User < ApplicationRecord
 	# has_many :properties, dependent: :destroy
 	has_many :appointments, dependent: :destroy
 	has_many :payments, dependent: :destroy
+	has_many :bookings, dependent: :destroy
 	has_one :address, as: :addressable ,dependent: :destroy
 	after_create :confirm_account, :customer
 	accepts_nested_attributes_for :roles, allow_destroy: true
 	accepts_nested_attributes_for :address, allow_destroy: true
+	accepts_nested_attributes_for :bookings, allow_destroy: true
+
 	
 	def confirm_account
 		email_token = JsonWebTokenService.encode({ email: self.email })
