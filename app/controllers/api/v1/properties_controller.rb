@@ -5,6 +5,7 @@ class Api::V1::PropertiesController < ApplicationController
   
   Not_Authorized = "Not Authorized"
   def index
+
     if params[:self_property].present? &&  params[:self_property] == true
       @properties = current_user.properties.where(publish: 1).where(status: 0).where(is_paid: false)
     elsif params[:recomended_property].present? && params[:recomended_property] == "true"
@@ -17,11 +18,12 @@ class Api::V1::PropertiesController < ApplicationController
       @properties = apiFeature
     end
     @total_property_count = @properties.count
-    @properties = @properties.page(params[:page]).per(25)
+    @properties = @properties.where.not(status: 1).page(params[:page]).per(25)
     render json: {properties: JSON.parse(PropertySerializer.new(@properties).serialized_json), total_property_count: @total_property_count}, status: :ok
   end
 
-  def property_detail  
+  def property_detail
+     
     @property = Property.find(params[:id])
     render json: PropertySerializer.new(@property).serialized_json, status: :ok
   end

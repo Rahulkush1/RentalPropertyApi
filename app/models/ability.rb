@@ -33,17 +33,17 @@ class Ability
         can :manage, Property
         can :manage, Appointment
       else
-        can :read, Property
+        can :manage, Property
         can :property_detail, Property
         can :filter_property, Property
-        can :read, Appointment
+        can :manage, Appointment
 
       end
     else
       can :read, Property
       can :property_detail, Property
       can :filter_property, Property
-      can :read, Appointment
+      can :read, :create, Appointment
     end
 
   end
