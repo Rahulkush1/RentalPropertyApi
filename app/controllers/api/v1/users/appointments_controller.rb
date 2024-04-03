@@ -3,7 +3,7 @@ class Api::V1::Users::AppointmentsController < ApplicationController
   	load_and_authorize_resource param_method: :appoinment_params
 
 	def index
-		 
+	
 		if params["self_appointment"]
 			render json: AppointmentSerializer.new(current_user.appointments).serialized_json ,status: :ok
 		else
@@ -41,7 +41,7 @@ class Api::V1::Users::AppointmentsController < ApplicationController
 		if @user.id == current_user.id
 			if appoinment_params[:status]
 				 if @appointment.update(status: appoinment_params[:status])
-				 	SendConfirmationAppointmentMailJob.perform_async(@appointment.to_json)
+				 	
 				 	render json: @appointment, status: 202
 				 else
 				 	render json: {error: @appointment.errors.full_messages}, status: :unprocessable_entity

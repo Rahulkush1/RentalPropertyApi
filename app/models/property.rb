@@ -14,6 +14,7 @@ class Property < ApplicationRecord
 	accepts_nested_attributes_for :address, allow_destroy: true
 	accepts_nested_attributes_for :attachments, allow_destroy: true
 
+	
 
 	enum publish: {
 	    NO: 0,
@@ -27,7 +28,6 @@ class Property < ApplicationRecord
   	}
 
   	enum prop_type: {
-  		Select: -1,
 	    FLAT: 0,
 	    PG: 1,
 	    ROOM: 2

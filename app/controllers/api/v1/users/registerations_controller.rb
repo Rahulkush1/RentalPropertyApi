@@ -5,11 +5,10 @@ class Api::V1::Users::RegisterationsController < ApplicationController
 
   Not_Authorized = "Not Authorized"
   def create
-    binding.pry
     if verify_otp_code?
       @user = User.new(user_params)
       if @user.save
-        # @user.add_role(params[:user][:roles][:name])
+        @user.add_role(params[:user][:role])
         token = JsonWebTokenService.encode({ id: @user.id })
         render json:  { user: UserSerializer.new(@user).serialized_json,auth_token: token,
         message: 'Registered Successfully'}, status: :created
