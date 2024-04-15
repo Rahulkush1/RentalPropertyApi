@@ -2,7 +2,7 @@ class Api::V1::PaymentsController < ApplicationController
 	# before_action :getPropertyId
 	# before_action :createProduct
 	# before_action :createPrice
-  before_action :authenticate_user, :only => [:create, :complete, :index, :get_property_booking]
+  before_action :authenticate_user, :only => [:create, :complete, :index, :get_property_booking,:getAdminBookings]
 	# def create_payment_intent
 
 	# 	@property = Property.find(params[:property_id])
@@ -81,10 +81,7 @@ class Api::V1::PaymentsController < ApplicationController
 	end
 
 	def complete
-
 		@booking = current_user.bookings.create(booking_params)
-		# @payment_intent_id = params[:payment_intent]
-		# @payment = current_user.payments.new(payment_params)
 		if @booking.save
 			@property = Property.find_by(id: booking_params[:property_id])
 			@property.update(status: 1)
@@ -106,6 +103,15 @@ class Api::V1::PaymentsController < ApplicationController
 	def get_property_booking
 	
 		@booking  = current_user.bookings.find_by(property_id: params[:property_id])
+		if @booking
+			render json: BookingSerializer.new(@booking).serialized_json ,status: :ok
+		else
+			render json: {message: "Not Found"}, status: :unprocessable_entity
+		end
+	end
+
+	def getAdminBookings
+		@booking  =  Booking.joins(property: :user).where(user: {id: current_user.id}).order(created_at: :asc)
 		if @booking
 			render json: BookingSerializer.new(@booking).serialized_json ,status: :ok
 		else

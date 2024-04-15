@@ -1,14 +1,11 @@
 class Api::V1::PropertiesController < ApplicationController
-  before_action :authenticate_user, :only => [:create, :update, :destroy, :delete_image_attachment]
+  before_action :authenticate_user, :only => [:create, :update, :destroy, :delete_image_attachment, :admin_properties]
   # before_action :validate_user, :only => [:update, :destroy, :delete_image_attachment]
   load_and_authorize_resource
   
   Not_Authorized = "Not Authorized"
   def index
-
-    if params[:self_property].present? &&  params[:self_property] == true
-      @properties = current_user.properties.where(publish: 1).where(status: 0).where(is_paid: false)
-    elsif params[:recomended_property].present? && params[:recomended_property] == "true"
+    if params[:recomended_property].present? && params[:recomended_property] == "true"
 
       @properties = Property.where(publish: 1).where(status: 0).where(is_paid: false)
       @properties = @properties.joins(:address).where(address: {city: params[:user_city].downcase}).limit(4)
@@ -20,6 +17,19 @@ class Api::V1::PropertiesController < ApplicationController
     @total_property_count = @properties.count
     @properties = @properties.where.not(status: 1).page(params[:page]).per(25)
     render json: {properties: JSON.parse(PropertySerializer.new(@properties).serialized_json), total_property_count: @total_property_count}, status: :ok
+  end
+
+  def admin_properties
+
+     if params[:self_property].present? &&  params[:self_property] == "true"
+       @properties = Property.joins(:user).where(publish: 1).where(is_paid: false).where(user_id: current_user.id)
+        @total_property_count = @properties.count
+        # @properties = @properties.where.not(status: 1).page(params[:page]).per(25)
+        render json: {properties: JSON.parse(PropertySerializer.new(@properties).serialized_json), total_property_count: @total_property_count}, status: :ok
+      else
+        render json: @property.erorrs, status: :unprocessable_entity
+      end
+
   end
 
   def property_detail
@@ -137,7 +147,7 @@ class Api::V1::PropertiesController < ApplicationController
   end 
 end
 
-
+  
 
 
 
