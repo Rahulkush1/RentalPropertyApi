@@ -36,6 +36,7 @@ Rails.application.routes.draw do
           get :filter_property
           get :property_detail
           delete :delete_image_attachment
+          get :admin_properties
         end
       end
       resources :reviews, :only => [:create]
@@ -43,6 +44,7 @@ Rails.application.routes.draw do
       post '/payment/complete', to: 'payments#complete'
       get '/bookings', to: "payments#index"
       get '/users/property/get_property_booking', to: "payments#get_property_booking"
+      get '/users/property/getAdminBookings', to: "payments#getAdminBookings"
 
     end
   end

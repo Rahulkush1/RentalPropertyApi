@@ -99,4 +99,5 @@ gem 'font-awesome-rails'
 gem 'stripe'
 gem 'rack-cors'
 gem 'kaminari'
+gem 'arctic_admin'
 
