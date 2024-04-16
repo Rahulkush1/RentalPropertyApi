@@ -1,7 +1,4 @@
 class Api::V1::PaymentsController < ApplicationController
-	# before_action :getPropertyId
-	# before_action :createProduct
-	# before_action :createPrice
   before_action :authenticate_user, :only => [:create, :complete, :index, :get_property_booking,:getAdminBookings]
 	# def create_payment_intent
 

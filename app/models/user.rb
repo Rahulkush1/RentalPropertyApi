@@ -2,8 +2,8 @@ class User < ApplicationRecord
 	has_secure_password
 	rolify
 	  has_many :reviews
-  	has_many :properties, through: :reviews
 	# has_many :properties, dependent: :destroy
+  	has_many :properties, through: :reviews
 	has_many :appointments, dependent: :destroy
 	has_many :payments, dependent: :destroy
 	has_many :bookings, dependent: :destroy
@@ -46,6 +46,6 @@ class User < ApplicationRecord
 	end
 
 	def full_name
-		self.first_name.capitalize + " " + self.last_name.capitalize
+		self.first_name&.capitalize + " " + self.last_name&.capitalize
 	end
 end
