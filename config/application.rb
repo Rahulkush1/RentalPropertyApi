@@ -7,7 +7,7 @@ require "rails/all"
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
-Dotenv::Railtie.load
+# Dotenv::Railtie.load
 
 EMAIL = ENV['EMAIL']
 PASSKEY = ENV['PASSKEY']
@@ -24,6 +24,7 @@ module RentalPropertyApi
         ENV[key.to_s] = value
       end 
     end
+    
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
