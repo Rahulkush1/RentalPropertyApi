@@ -5,6 +5,12 @@ class Api::V1::Users::RegisterationsController < ApplicationController
 
   Not_Authorized = "Not Authorized"
   def create
+    @existing_user = User.find_by(email: user_params['email'])
+
+    if @existing_user
+      return render json: {message: 'User with this email already registered'}, status: 409
+    end
+
     if verify_otp_code?
       @user = User.new(user_params)
       if @user.save
@@ -24,7 +30,6 @@ class Api::V1::Users::RegisterationsController < ApplicationController
   end
 
   def update
-    
       if current_user.update(user_params)
         render json: UserSerializer.new(current_user).serialized_json, status: :ok 
       else
